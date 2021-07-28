@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Optional;
 
 @RestController
 @RequestMapping(path = "propostas")
@@ -19,12 +20,19 @@ public class PropostaController {
 
     private final PropostaRepository repository;
 
-    public PropostaController (PropostaRepository repository) {this.repository = repository;}
+    public PropostaController(PropostaRepository repository) {
+        this.repository = repository;
+    }
 
     @PostMapping
     public ResponseEntity<?> cadastrarProposta(
             @Valid @RequestBody CadastrarPropostaRequest request,
             UriComponentsBuilder uriBuilder) {
+
+        Optional<Proposta> consultaProposta = repository.findByDocumento(request.getDocumento());
+        if (consultaProposta.isPresent()) {
+            return ResponseEntity.unprocessableEntity().build();
+        }
 
         Proposta proposta = repository.save(request.toModel());
 
@@ -32,7 +40,7 @@ public class PropostaController {
                 .path("/propostas/{id}")
                 .buildAndExpand(proposta.getId())
                 .toUri();
-        
+
         return ResponseEntity.created(uri).build();
     }
 }
