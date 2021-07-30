@@ -17,7 +17,7 @@ public class Proposta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long Id;
+    private Long Id;
 
     @NotBlank
     private String nome;
@@ -36,6 +36,9 @@ public class Proposta {
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal salario;
 
+    @NotBlank
+    private String estadoProposta;
+
     @Deprecated
     public Proposta() { }
 
@@ -45,9 +48,22 @@ public class Proposta {
         this.documento = documento;
         this.endereco = endereco;
         this.salario = salario;
+        this.estadoProposta = "PENDENTE";
     }
 
-    public long getId() {
+    public Long getId() {
         return Id;
+    }
+
+    public String getDocumento() {
+        return documento;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setEstadoProposta(String estadoProposta) {
+        this.estadoProposta = estadoProposta;
     }
 }
