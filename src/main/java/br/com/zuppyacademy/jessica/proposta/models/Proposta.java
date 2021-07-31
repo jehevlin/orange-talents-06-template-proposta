@@ -39,6 +39,8 @@ public class Proposta {
     @NotBlank
     private String estadoProposta;
 
+    private String numeroCartao;
+
     @Deprecated
     public Proposta() { }
 
@@ -49,6 +51,7 @@ public class Proposta {
         this.endereco = endereco;
         this.salario = salario;
         this.estadoProposta = "PENDENTE";
+        this.numeroCartao = null;
     }
 
     public Long getId() {
@@ -65,5 +68,13 @@ public class Proposta {
 
     public void setEstadoProposta(String estadoProposta) {
         this.estadoProposta = estadoProposta;
+    }
+
+    public String getNumeroCartao() {
+        return numeroCartao;
+    }
+
+    public void setNumeroCartao(String numeroCartao) {
+        this.numeroCartao = numeroCartao;
     }
 }
