@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface PropostaRepository extends JpaRepository<Proposta, Long> {
     Optional<Proposta> findByDocumento(String documento);
+    Optional<Proposta> findByNumeroCartao(String numeroCartao);
     List<Proposta> findAllByNumeroCartao(String numeroCartao);
 }
