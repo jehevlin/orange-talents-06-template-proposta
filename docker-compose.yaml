@@ -144,6 +144,15 @@ services:
       VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
       VAULT_ADDR: http://127.0.0.1:8200
 
+  proposta:
+    build: .
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/proposta
+    depends_on:
+      - postgres
+
 volumes:
   grafana-volume:
   prometheus-volume:
