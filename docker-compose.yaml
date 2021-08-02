@@ -47,9 +47,9 @@ services:
   keycloak:
     image: jboss/keycloak
     ports:
-      - 18443:8443
-      - 18080:8080
-      - 19990:9990
+      - 8443:8443
+      - 8080:8080
+      - 9990:9990
     depends_on:
       # Just a delay to wait for postgres! This is not recommended!
       - grafana
@@ -147,9 +147,13 @@ services:
   proposta:
     build: .
     ports:
-      - 8080:8080
+      - 5000:5000
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/proposta
+      CONTAS_API: http://contas:8888
+      ANALISE_API: http://analise:9999
+      KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta
+      KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
     depends_on:
       - postgres
 

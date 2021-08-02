@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@FeignClient(name = "sistemaContas", url = "http://localhost:8888")
+@FeignClient(name = "sistemaContas", url = "${external.api.contas}")
 public interface SistemaContasClient {
 
     @RequestMapping(method = RequestMethod.GET, value = "/api/contas", consumes = "application/json")
