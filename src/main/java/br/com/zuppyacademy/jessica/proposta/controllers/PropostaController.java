@@ -8,10 +8,7 @@ import br.com.zuppyacademy.jessica.proposta.repositories.PropostaRepository;
 import br.com.zuppyacademy.jessica.proposta.requests.CadastrarPropostaRequest;
 import feign.FeignException;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.transaction.Transactional;
@@ -72,5 +69,15 @@ public class PropostaController {
         }
 
         propostaRepository.save(proposta);
+    }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<?> detalheProposta(@PathVariable(name = "id") long idProposta) {
+        Optional<Proposta> buscaProposta = propostaRepository.findById(idProposta);
+        if (buscaProposta.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        Proposta proposta = buscaProposta.get();
+        return ResponseEntity.ok(proposta.getEstadoProposta());
     }
 }

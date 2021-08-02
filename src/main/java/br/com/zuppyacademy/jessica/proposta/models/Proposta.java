@@ -77,4 +77,8 @@ public class Proposta {
     public void setNumeroCartao(String numeroCartao) {
         this.numeroCartao = numeroCartao;
     }
+
+    public String getEstadoProposta() {
+        return estadoProposta;
+    }
 }
