@@ -18,6 +18,9 @@ public class Cartao {
     @OneToOne
     private Proposta proposta;
 
+    @OneToOne
+    private BloqueioCartao bloqueio;
+
     @Deprecated
     public Cartao() {
     }
@@ -37,5 +40,13 @@ public class Cartao {
 
     public Proposta getProposta() {
         return proposta;
+    }
+
+    public BloqueioCartao getBloqueio() {
+        return bloqueio;
+    }
+
+    public void bloquearCartao(BloqueioCartao bloqueio){
+        this.bloqueio = bloqueio;
     }
 }

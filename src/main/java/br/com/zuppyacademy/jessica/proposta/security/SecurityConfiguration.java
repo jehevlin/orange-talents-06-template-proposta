@@ -16,9 +16,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests(authorizeRequests -> authorizeRequests
                 .mvcMatchers("**/actuator/**").permitAll()
-                .mvcMatchers(HttpMethod.POST, "/biometrias/**").hasAuthority("SCOPE_biometria:write")
-                .mvcMatchers(HttpMethod.POST, "/propostas/**").hasAuthority("SCOPE_proposta:write")
                 .mvcMatchers(HttpMethod.GET, "/propostas/**").hasAuthority("SCOPE_proposta:read")
+                .mvcMatchers(HttpMethod.POST, "/propostas/**").hasAuthority("SCOPE_proposta:write")
+                .mvcMatchers(HttpMethod.POST, "/biometrias/**").hasAuthority("SCOPE_biometria:write")
+                .mvcMatchers(HttpMethod.PATCH, "/cartoes/**").hasAuthority("SCOPE_cartao:write")
         )
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().csrf().disable()
