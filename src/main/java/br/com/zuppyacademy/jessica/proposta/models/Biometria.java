@@ -1,22 +1,22 @@
 package br.com.zuppyacademy.jessica.proposta.models;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.IdClass;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
 @Entity
-@IdClass(BiometriaId.class)
 public class Biometria {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     @NotBlank
     private String figerprint;
 
-    @Id
-    @NotBlank
-    private String cartao;
+    @ManyToOne
+    @JoinColumn(name = "cartao_id")
+    private Cartao cartao;
 
     private LocalDateTime dataCadastro;
 
@@ -24,17 +24,13 @@ public class Biometria {
     public Biometria() {
     }
 
-    public Biometria(String figerprint, String cartao) {
+    public Biometria(String figerprint, Cartao cartao) {
         this.figerprint = figerprint;
         this.cartao = cartao;
         this.dataCadastro = LocalDateTime.now();
     }
 
-    public String getFigerprint() {
-        return figerprint;
-    }
-
-    public String getCartao() {
-        return cartao;
+    public Long getId() {
+        return id;
     }
 }

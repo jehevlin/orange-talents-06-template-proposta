@@ -1,4 +1,4 @@
-package br.com.zuppyacademy.jessica.proposta.requests;
+package br.com.zuppyacademy.jessica.proposta.controllers.requests;
 
 import br.com.zuppyacademy.jessica.proposta.models.Proposta;
 import org.hibernate.validator.constraints.br.CPF;

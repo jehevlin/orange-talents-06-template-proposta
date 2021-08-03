@@ -150,12 +150,17 @@ services:
       - 5000:5000
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/proposta
+      SPRING_DATASOURCE_USERNAME: proposta
+      SPRING_DATASOURCE_PASSWORD: password
       CONTAS_API: http://contas:8888
       ANALISE_API: http://analise:9999
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta
       KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
     depends_on:
       - postgres
+      - keycloak
+      - analise
+      - transacoes
 
 volumes:
   grafana-volume:

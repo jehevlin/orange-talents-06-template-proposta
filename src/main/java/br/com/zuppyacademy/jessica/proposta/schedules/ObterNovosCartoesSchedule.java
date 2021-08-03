@@ -2,7 +2,10 @@ package br.com.zuppyacademy.jessica.proposta.schedules;
 
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.CartaoResponse;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.SistemaContasClient;
+import br.com.zuppyacademy.jessica.proposta.models.Cartao;
+import br.com.zuppyacademy.jessica.proposta.models.EstadoProposta;
 import br.com.zuppyacademy.jessica.proposta.models.Proposta;
+import br.com.zuppyacademy.jessica.proposta.repositories.CartaoRepository;
 import br.com.zuppyacademy.jessica.proposta.repositories.PropostaRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,32 +20,29 @@ import java.util.stream.Collectors;
 public class ObterNovosCartoesSchedule {
 
     private final PropostaRepository propostaRepository;
+    private final CartaoRepository cartaoRepository;
     private final SistemaContasClient sistemaContasClient;
 
-    public ObterNovosCartoesSchedule(PropostaRepository propostaRepository, SistemaContasClient sistemaContasClient) {
+    public ObterNovosCartoesSchedule(PropostaRepository propostaRepository, CartaoRepository cartaoRepository, SistemaContasClient sistemaContasClient) {
         this.propostaRepository = propostaRepository;
+        this.cartaoRepository = cartaoRepository;
         this.sistemaContasClient = sistemaContasClient;
     }
 
     @Scheduled(fixedDelay = 60000)
-    @Transactional
     void obterNovosCartoes() {
 
-        List<Proposta> propostasSemCartao = propostaRepository.findAllByNumeroCartao(null);
+        List<Proposta> propostasSemCartao = propostaRepository.findAllByEstado(EstadoProposta.ELEGIVEL);
         if (propostasSemCartao.isEmpty()) return;
 
         Map<String, String> cartoesEmitidos = obterCartoes();
 
-        List<Proposta> propostas = propostasSemCartao.stream()
-                .peek(proposta -> {
-                    String idProposta = proposta.getId().toString();
-                    if (cartoesEmitidos.containsKey(idProposta)) {
-                        proposta.setNumeroCartao(cartoesEmitidos.get(idProposta));
-                    }
-                })
-                .collect(Collectors.toList());
-
-        propostaRepository.saveAll(propostas);
+        propostasSemCartao.forEach(proposta -> {
+            String idProposta = proposta.getId().toString();
+            if (cartoesEmitidos.containsKey(idProposta)) {
+                vincularCartao(cartoesEmitidos.get(idProposta), proposta);
+            }
+        });
     }
 
     private Map<String, String> obterCartoes() {
@@ -54,5 +54,14 @@ public class ObterNovosCartoesSchedule {
         } catch (Exception e) {
             return new HashMap<>();
         }
+    }
+
+    @Transactional
+    private void vincularCartao(String numeroCartao, Proposta proposta) {
+        Cartao cartao = new Cartao(numeroCartao, proposta);
+        proposta.setEstado(EstadoProposta.CARTAO_EMITIDO);
+
+        cartaoRepository.save(cartao);
+        propostaRepository.save(proposta);
     }
 }

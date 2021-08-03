@@ -3,9 +3,11 @@ package br.com.zuppyacademy.jessica.proposta.controllers;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaFinanceiro.SistemaFinanceiroClient;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaFinanceiro.SolicitacaoRequest;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaFinanceiro.SolicitacaoResponse;
+import br.com.zuppyacademy.jessica.proposta.controllers.requests.DetalhesPropostaResponse;
+import br.com.zuppyacademy.jessica.proposta.models.EstadoProposta;
 import br.com.zuppyacademy.jessica.proposta.models.Proposta;
 import br.com.zuppyacademy.jessica.proposta.repositories.PropostaRepository;
-import br.com.zuppyacademy.jessica.proposta.requests.CadastrarPropostaRequest;
+import br.com.zuppyacademy.jessica.proposta.controllers.requests.CadastrarPropostaRequest;
 import feign.FeignException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -60,11 +62,11 @@ public class PropostaController {
                     proposta.getId().toString()));
 
             if (response.getResultadoSolicitacao().equals("SEM_RESTRICAO")) {
-                proposta.setEstadoProposta("ELEGIVEL");
+                proposta.setEstado(EstadoProposta.ELEGIVEL);
             }
         } catch (FeignException.FeignClientException e) {
             if (e.status() == 422) {
-                proposta.setEstadoProposta("NAO_ELEGIVEL");
+                proposta.setEstado(EstadoProposta.NAO_ELEGIVEL);
             }
         }
 
@@ -77,7 +79,7 @@ public class PropostaController {
         if (buscaProposta.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        Proposta proposta = buscaProposta.get();
-        return ResponseEntity.ok(proposta.getEstadoProposta());
+        DetalhesPropostaResponse response = new DetalhesPropostaResponse(buscaProposta.get());
+        return ResponseEntity.ok(response);
     }
 }

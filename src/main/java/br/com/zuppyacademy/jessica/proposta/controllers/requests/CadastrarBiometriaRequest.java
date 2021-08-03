@@ -1,4 +1,4 @@
-package br.com.zuppyacademy.jessica.proposta.requests;
+package br.com.zuppyacademy.jessica.proposta.controllers.requests;
 
 import javax.validation.constraints.NotBlank;
 

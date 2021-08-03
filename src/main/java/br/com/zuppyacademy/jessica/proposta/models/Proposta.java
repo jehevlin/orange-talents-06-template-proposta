@@ -2,10 +2,7 @@ package br.com.zuppyacademy.jessica.proposta.models;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -17,7 +14,7 @@ public class Proposta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @NotBlank
     private String nome;
@@ -36,13 +33,17 @@ public class Proposta {
     @DecimalMin(value = "0.0", inclusive = false)
     private BigDecimal salario;
 
-    @NotBlank
-    private String estadoProposta;
-
-    private String numeroCartao;
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private EstadoProposta estado;
 
     @Deprecated
-    public Proposta() { }
+    public Proposta() {
+    }
+
+    public Proposta(Long id) {
+        this.id = id;
+    }
 
     public Proposta(String nome, String email, String documento, String endereco, BigDecimal salario) {
         this.nome = nome;
@@ -50,35 +51,26 @@ public class Proposta {
         this.documento = documento;
         this.endereco = endereco;
         this.salario = salario;
-        this.estadoProposta = "PENDENTE";
-        this.numeroCartao = null;
+        this.estado = EstadoProposta.PENDENTE;
     }
 
     public Long getId() {
-        return Id;
-    }
-
-    public String getDocumento() {
-        return documento;
+        return id;
     }
 
     public String getNome() {
         return nome;
     }
 
-    public void setEstadoProposta(String estadoProposta) {
-        this.estadoProposta = estadoProposta;
+    public String getDocumento() {
+        return documento;
     }
 
-    public String getNumeroCartao() {
-        return numeroCartao;
+    public void setEstado(EstadoProposta estado) {
+        this.estado = estado;
     }
 
-    public void setNumeroCartao(String numeroCartao) {
-        this.numeroCartao = numeroCartao;
-    }
-
-    public String getEstadoProposta() {
-        return estadoProposta;
+    public EstadoProposta getEstado() {
+        return estado;
     }
 }
