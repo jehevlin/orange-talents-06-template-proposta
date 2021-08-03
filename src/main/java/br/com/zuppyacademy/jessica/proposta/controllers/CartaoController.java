@@ -1,5 +1,8 @@
 package br.com.zuppyacademy.jessica.proposta.controllers;
 
+import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.BloquearCartaoRequest;
+import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.BloquearCartaoResponse;
+import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.SistemaContasClient;
 import br.com.zuppyacademy.jessica.proposta.models.BloqueioCartao;
 import br.com.zuppyacademy.jessica.proposta.models.Cartao;
 import br.com.zuppyacademy.jessica.proposta.repositories.BloqueioCartaoRepository;
@@ -20,10 +23,12 @@ public class CartaoController {
 
     private final CartaoRepository cartaoRepository;
     private final BloqueioCartaoRepository bloqueioCartaoRepository;
+    private final SistemaContasClient sistemaContasClient;
 
-    public CartaoController(CartaoRepository cartaoRepository, BloqueioCartaoRepository bloqueioCartaoRepository) {
+    public CartaoController(CartaoRepository cartaoRepository, BloqueioCartaoRepository bloqueioCartaoRepository, SistemaContasClient sistemaContasClient) {
         this.cartaoRepository = cartaoRepository;
         this.bloqueioCartaoRepository = bloqueioCartaoRepository;
+        this.sistemaContasClient = sistemaContasClient;
     }
 
     @PatchMapping(path = "/{id}/bloquear")
@@ -44,11 +49,21 @@ public class CartaoController {
             return ResponseEntity.unprocessableEntity().build();
         }
 
-        BloqueioCartao bloqueio = new BloqueioCartao(cartao, ipAddress, userAgent);
-        cartao.bloquearCartao(bloqueio);
+        try {
+            BloquearCartaoResponse bloquearCartaoResponse = sistemaContasClient.bloquearCartao(
+                    new BloquearCartaoRequest("proposta"), cartao.getNumero()
+            );
 
-        bloqueioCartaoRepository.save(bloqueio);
-        cartaoRepository.save(cartao);
+            if (bloquearCartaoResponse.getResultado().equals("BLOQUEADO")) {
+                BloqueioCartao bloqueio = new BloqueioCartao(cartao, ipAddress, userAgent);
+                cartao.bloquearCartao(bloqueio);
+
+                bloqueioCartaoRepository.save(bloqueio);
+                cartaoRepository.save(cartao);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
 
         return ResponseEntity.ok().build();
     }

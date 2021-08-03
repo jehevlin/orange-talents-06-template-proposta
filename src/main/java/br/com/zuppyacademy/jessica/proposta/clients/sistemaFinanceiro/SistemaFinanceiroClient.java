@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface SistemaFinanceiroClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/solicitacao", consumes = "application/json")
-    SolicitacaoResponse ObterSituacao(SolicitacaoRequest request);
+    SolicitacaoResponse obterSituacao(SolicitacaoRequest request);
 }

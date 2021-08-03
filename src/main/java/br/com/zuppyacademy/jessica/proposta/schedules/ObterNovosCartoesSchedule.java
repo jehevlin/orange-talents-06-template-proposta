@@ -47,7 +47,7 @@ public class ObterNovosCartoesSchedule {
 
     private Map<String, String> obterCartoes() {
         try {
-            return sistemaContasClient.ObterCartoes().stream()
+            return sistemaContasClient.obterCartoes().stream()
                     .collect(Collectors.toMap(
                             CartaoResponse::getIdProposta,
                             CartaoResponse::getId));

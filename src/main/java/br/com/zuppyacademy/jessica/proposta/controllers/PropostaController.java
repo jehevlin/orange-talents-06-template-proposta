@@ -56,7 +56,7 @@ public class PropostaController {
 
     private void verificarElegibilidade(Proposta proposta) {
         try {
-            SolicitacaoResponse response = sistemaFinanceiroClient.ObterSituacao(new SolicitacaoRequest(
+            SolicitacaoResponse response = sistemaFinanceiroClient.obterSituacao(new SolicitacaoRequest(
                     proposta.getDocumento(),
                     proposta.getNome(),
                     proposta.getId().toString()));
