@@ -129,6 +129,19 @@ public class CartaoController {
             @RequestBody @Valid AddCarteiraRequest addCarteiraRequest,
             UriComponentsBuilder uriBuilder) {
 
+        return addCarteira(idCartao, CarteiraDigital.PAYPAL, addCarteiraRequest, uriBuilder);
+    }
+
+    @PostMapping(path = "/{id}/carteiras/samsung-pay")
+    public ResponseEntity<?> addCarteiraSamsungPay(
+            @PathVariable(name = "id") long idCartao,
+            @RequestBody @Valid AddCarteiraRequest addCarteiraRequest,
+            UriComponentsBuilder uriBuilder) {
+
+        return addCarteira(idCartao, CarteiraDigital.SAMSUNG_PAY, addCarteiraRequest, uriBuilder);
+    }
+
+    private ResponseEntity<?> addCarteira(long idCartao, CarteiraDigital carteiraDigital, AddCarteiraRequest addCarteiraRequest, UriComponentsBuilder uriBuilder) {
         Optional<Cartao> buscaCartao = cartaoRepository.findById(idCartao);
         if (buscaCartao.isEmpty()) {
             return ResponseEntity.notFound().build();
@@ -136,7 +149,6 @@ public class CartaoController {
 
         Cartao cartao = buscaCartao.get();
         String email = addCarteiraRequest.getEmail();
-        CarteiraDigital carteiraDigital = CarteiraDigital.PAYPAL;
 
         Optional<Carteira> novaCarteira = getNovaCarteira(cartao, email, carteiraDigital);
 
