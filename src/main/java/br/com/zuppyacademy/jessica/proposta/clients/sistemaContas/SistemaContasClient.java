@@ -18,4 +18,7 @@ public interface SistemaContasClient {
 
     @RequestMapping(method = RequestMethod.POST, value = "/api/cartoes/{idCartao}/avisos", consumes = "application/json")
     AvisarViagemResponse avisarViagem(AvisarViagemRequest request, @PathVariable("idCartao") String idCartao);
+
+    @RequestMapping(method = RequestMethod.POST, value = "/api/cartoes/{idCartao}/carteiras", consumes = "application/json")
+    VincularCarteiraResponse vincularCarteira(VincularCarteiraRequest request, @PathVariable("idCartao") String idCartao);
 }
