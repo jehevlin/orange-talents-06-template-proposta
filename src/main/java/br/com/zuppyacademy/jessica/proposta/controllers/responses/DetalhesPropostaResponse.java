@@ -1,4 +1,4 @@
-package br.com.zuppyacademy.jessica.proposta.controllers.requests;
+package br.com.zuppyacademy.jessica.proposta.controllers.responses;
 
 import br.com.zuppyacademy.jessica.proposta.models.EstadoProposta;
 import br.com.zuppyacademy.jessica.proposta.models.Proposta;

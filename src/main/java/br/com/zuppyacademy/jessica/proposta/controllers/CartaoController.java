@@ -3,18 +3,19 @@ package br.com.zuppyacademy.jessica.proposta.controllers;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.BloquearCartaoRequest;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.BloquearCartaoResponse;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.SistemaContasClient;
+import br.com.zuppyacademy.jessica.proposta.controllers.requests.AvisarViagemRequest;
+import br.com.zuppyacademy.jessica.proposta.models.AvisoViagem;
 import br.com.zuppyacademy.jessica.proposta.models.BloqueioCartao;
 import br.com.zuppyacademy.jessica.proposta.models.Cartao;
+import br.com.zuppyacademy.jessica.proposta.repositories.AvisoViagemRepository;
 import br.com.zuppyacademy.jessica.proposta.repositories.BloqueioCartaoRepository;
 import br.com.zuppyacademy.jessica.proposta.repositories.CartaoRepository;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.util.Optional;
 
 @RestController
@@ -23,11 +24,17 @@ public class CartaoController {
 
     private final CartaoRepository cartaoRepository;
     private final BloqueioCartaoRepository bloqueioCartaoRepository;
+    private final AvisoViagemRepository avisoViagemRepository;
     private final SistemaContasClient sistemaContasClient;
 
-    public CartaoController(CartaoRepository cartaoRepository, BloqueioCartaoRepository bloqueioCartaoRepository, SistemaContasClient sistemaContasClient) {
+    public CartaoController(
+            CartaoRepository cartaoRepository,
+            BloqueioCartaoRepository bloqueioCartaoRepository,
+            AvisoViagemRepository avisoViagemRepository,
+            SistemaContasClient sistemaContasClient) {
         this.cartaoRepository = cartaoRepository;
         this.bloqueioCartaoRepository = bloqueioCartaoRepository;
+        this.avisoViagemRepository = avisoViagemRepository;
         this.sistemaContasClient = sistemaContasClient;
     }
 
@@ -65,6 +72,32 @@ public class CartaoController {
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
 
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping(path = "/{id}/avisarViagem")
+    public ResponseEntity<?> avisarViagem(
+            @PathVariable(name = "id") long idCartao,
+            @RequestBody @Valid AvisarViagemRequest avisarViagemRequest,
+            HttpServletRequest request
+    ) {
+        Optional<Cartao> buscaCartao = cartaoRepository.findById(idCartao);
+        if (buscaCartao.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Cartao cartao = buscaCartao.get();
+        String ipAddress = request.getRemoteAddr();
+        String userAgent = request.getHeader("User-Agent");
+
+        AvisoViagem avisoViagem = new AvisoViagem(
+                cartao,
+                avisarViagemRequest.getDestino(),
+                avisarViagemRequest.getDataTermino(),
+                ipAddress,
+                userAgent);
+
+        avisoViagemRepository.save(avisoViagem);
         return ResponseEntity.ok().build();
     }
 }

@@ -3,7 +3,7 @@ package br.com.zuppyacademy.jessica.proposta.controllers;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaFinanceiro.SistemaFinanceiroClient;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaFinanceiro.SolicitacaoRequest;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaFinanceiro.SolicitacaoResponse;
-import br.com.zuppyacademy.jessica.proposta.controllers.requests.DetalhesPropostaResponse;
+import br.com.zuppyacademy.jessica.proposta.controllers.responses.DetalhesPropostaResponse;
 import br.com.zuppyacademy.jessica.proposta.models.EstadoProposta;
 import br.com.zuppyacademy.jessica.proposta.models.Proposta;
 import br.com.zuppyacademy.jessica.proposta.repositories.PropostaRepository;
