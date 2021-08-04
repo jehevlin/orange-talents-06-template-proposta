@@ -1,5 +1,6 @@
 package br.com.zuppyacademy.jessica.proposta.controllers;
 
+import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.AvisarViagemResponse;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.BloquearCartaoRequest;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.BloquearCartaoResponse;
 import br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.SistemaContasClient;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 @RestController
@@ -90,14 +92,27 @@ public class CartaoController {
         String ipAddress = request.getRemoteAddr();
         String userAgent = request.getHeader("User-Agent");
 
-        AvisoViagem avisoViagem = new AvisoViagem(
-                cartao,
-                avisarViagemRequest.getDestino(),
-                avisarViagemRequest.getDataTermino(),
-                ipAddress,
-                userAgent);
+        try {
+            AvisarViagemResponse avisarViagemResponse =
+                    sistemaContasClient.avisarViagem(new br.com.zuppyacademy.jessica.proposta.clients.sistemaContas.AvisarViagemRequest(
+                            avisarViagemRequest.getDestino(),
+                            avisarViagemRequest.getDataTermino().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"))
+                    ), cartao.getNumero());
 
-        avisoViagemRepository.save(avisoViagem);
+            if (avisarViagemResponse.getResultado().equals("CRIADO")) {
+                AvisoViagem avisoViagem = new AvisoViagem(
+                        cartao,
+                        avisarViagemRequest.getDestino(),
+                        avisarViagemRequest.getDataTermino(),
+                        ipAddress,
+                        userAgent);
+
+                avisoViagemRepository.save(avisoViagem);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
         return ResponseEntity.ok().build();
     }
 }
