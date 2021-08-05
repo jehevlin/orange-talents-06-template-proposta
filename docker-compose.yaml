@@ -120,8 +120,8 @@ services:
   prometheus:
     image: prom/prometheus
     volumes:
-     - prometheus-volume:/etc/prometheus/
-    network_mode: bridge
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-volume:/etc/prometheus/
     ports:
       - "9090:9090"
 
@@ -129,7 +129,6 @@ services:
     image: grafana/grafana
     volumes:
       - grafana-volume:/var/lib/grafana
-    network_mode: bridge
     ports:
       - "3000:3000"
     depends_on:
@@ -162,6 +161,7 @@ services:
     depends_on:
       - postgres
       - keycloak
+      - prometheus
       - analise
       - transacoes
 
