@@ -154,6 +154,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/proposta
       SPRING_DATASOURCE_USERNAME: proposta
       SPRING_DATASOURCE_PASSWORD: password
+      JAEGER_ENDPOINT: http://jaeger:14268/api/traces
       CONTAS_API: http://contas:8888
       ANALISE_API: http://analise:9999
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta

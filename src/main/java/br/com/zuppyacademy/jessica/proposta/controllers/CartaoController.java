@@ -10,6 +10,7 @@ import br.com.zuppyacademy.jessica.proposta.repositories.CartaoRepository;
 import br.com.zuppyacademy.jessica.proposta.repositories.CarteiraRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -78,7 +79,7 @@ public class CartaoController {
                 cartaoRepository.save(cartao);
             }
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
         return ResponseEntity.ok().build();
@@ -117,7 +118,7 @@ public class CartaoController {
                 avisoViagemRepository.save(avisoViagem);
             }
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
 
         return ResponseEntity.ok().build();
