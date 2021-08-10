@@ -37,7 +37,7 @@ public class PropostaController {
             @Valid @RequestBody CadastrarPropostaRequest request,
             UriComponentsBuilder uriBuilder) {
 
-        Optional<Proposta> consultaProposta = propostaRepository.findByDocumento(request.getDocumento());
+        Optional<Proposta> consultaProposta = propostaRepository.findByEmail(request.getEmail());
         if (consultaProposta.isPresent()) {
             return ResponseEntity.unprocessableEntity().build();
         }

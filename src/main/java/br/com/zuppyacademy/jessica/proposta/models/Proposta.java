@@ -1,5 +1,6 @@
 package br.com.zuppyacademy.jessica.proposta.models;
 
+import br.com.zuppyacademy.jessica.proposta.models.annotations.DadoSeguro;
 import org.hibernate.validator.constraints.br.CPF;
 
 import javax.persistence.*;
@@ -23,7 +24,9 @@ public class Proposta {
     @Email
     private String email;
 
+    @NotBlank
     @CPF
+    @Convert(converter = DadoSeguro.class)
     private String documento;
 
     @NotBlank

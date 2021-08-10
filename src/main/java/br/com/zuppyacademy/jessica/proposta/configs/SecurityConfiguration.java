@@ -1,4 +1,4 @@
-package br.com.zuppyacademy.jessica.proposta.security;
+package br.com.zuppyacademy.jessica.proposta.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;

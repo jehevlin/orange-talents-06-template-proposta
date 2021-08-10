@@ -158,10 +158,14 @@ services:
       ANALISE_API: http://analise:9999
       KEYCLOAK_ISSUER_URI: http://keycloak:8080/auth/realms/proposta
       KEYCLOAK_JWKS_URI: http://keycloak:8080/auth/realms/proposta/protocol/openid-connect/certs
+      VAULT_TOKEN: ee413645-dbe8-4848-afc6-6bb2768ada75
+      VAULT_ADDR: http://vault:8200
+      VAULT_PATH: secret/proposta
     depends_on:
       - postgres
       - keycloak
       - prometheus
+      - vault
       - analise
       - transacoes
 
